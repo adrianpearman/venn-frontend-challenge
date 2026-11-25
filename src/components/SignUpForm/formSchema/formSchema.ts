@@ -5,8 +5,8 @@ import { corporationCodeSchema } from "@/components/SignUpForm/formSchema/corpor
 
 // Would generally have a named schema for each form in an application (i.e. Sign Up Form -> SignUpFormSchema). Since there is only one form in the project, i'll name this as formSchema
 export const formSchema = z.object({
-  firstName: z.string(),
-  lastName: z.string(),
+  firstName: z.string().min(1).max(50).trim(),
+  lastName: z.string().min(1).max(50).trim(),
   corporationNumber: corporationCodeSchema,
   phone: canadianPhoneSchema,
 });
