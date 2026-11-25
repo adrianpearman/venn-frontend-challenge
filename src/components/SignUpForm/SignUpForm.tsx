@@ -12,7 +12,7 @@ export const SignUpForm = () => {
   const {
     register,
     handleSubmit,
-    formState: { errors, isSubmitting },
+    formState: { errors, isSubmitting, isSubmitSuccessful },
   } = useForm<FormData>({
     defaultValues: {
       corporationNumber: "",
@@ -23,7 +23,13 @@ export const SignUpForm = () => {
     resolver: zodResolver(formSchema),
   });
 
+  const formHasAnyErrors = Object.keys(errors).length > 0;
+
   const onFormSubmit = async (data: FormData) => {
+    if (formHasAnyErrors) {
+      return;
+    }
+
     try {
       const requestBody = {
         corporationNumber: data.corporationNumber,
@@ -34,6 +40,7 @@ export const SignUpForm = () => {
 
       const request = await fetch(submitSignUpFormEndpoint, {
         body: JSON.stringify(requestBody),
+        headers: { "Content-Type": "application/json" },
         method: "POST",
       });
 
@@ -97,10 +104,15 @@ export const SignUpForm = () => {
           />
           <div>
             <button
-              className="p-4 bg-black text-white text-center w-full rounded-xl"
+              className={`p-4 text-white text-center w-full rounded-xl cursor-pointer disabled:cursor-not-allowed disabled:bg-black/60 transition-colors duration-300 ease-in-out ${isSubmitSuccessful ? "bg-green-600" : "bg-black"}`}
+              disabled={formHasAnyErrors || isSubmitting}
               type="submit"
             >
-              {isSubmitting ? "Submitting" : "Submit"}
+              {isSubmitSuccessful
+                ? "Successfully Submitted New Account"
+                : isSubmitting
+                  ? "Submitting"
+                  : "Submit"}
             </button>
           </div>
         </form>
