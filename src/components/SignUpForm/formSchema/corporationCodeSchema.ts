@@ -41,8 +41,8 @@ const debouncedCorporateCodeValidation = (corporationCode: string) => {
 
 export const corporationCodeSchema = z
   .string()
-  .regex(/^\d{9}$/, "Must be a 9-digit number")
+  .regex(/^\d{9}$/, "Corporation code must be a 9-digit number")
   .min(3)
   .refine(debouncedCorporateCodeValidation, {
-    message: "Invalid corporation number provided",
+    message: "Invalid corporation number",
   });
