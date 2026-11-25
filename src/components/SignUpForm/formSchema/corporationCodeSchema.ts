@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { validateCorporationCodeEndpoint } from "@/utils/consts";
 
 let abortController: AbortController | null = null;
 let validateRequestID: ReturnType<typeof setTimeout>;
@@ -25,12 +26,13 @@ const debouncedCorporateCodeValidation = (corporationCode: string) => {
       abortController = new AbortController();
       try {
         const res = await fetch(
-          `https://fe-hometask-api.qa.vault.tryvault.com/corporation-number/${corporationCode}`,
+          `${validateCorporationCodeEndpoint}/${corporationCode}`,
           {
             signal: abortController.signal,
           },
         );
         const data = await res.json();
+        console.log(data);
         resolve(data.valid === true);
       } catch (err) {
         resolve(err instanceof DOMException && err.name === "AbortError");
